@@ -11,7 +11,7 @@ def install_dependencies_backend(cwd):
 
     if system == 'Windows':
         subprocess.Popen(
-            f'start cmd /K "cd /D {cwd} && python -m venv venv && venv\\Scripts\\activate && pip install -r requirements.txt"',
+            f'start cmd /K "cd /D {cwd} && pip install virtualenv && python -m venv venv && venv\\Scripts\\activate && pip install -r requirements.txt"',
             shell=True
         )
     elif system == 'Darwin':  # macOS
