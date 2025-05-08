@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Node.js
 node_modules
 dist
 dist-ssr
@@ -21,10 +22,40 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
-*.py
 *.sw?
 
+# Python virtual environment
 backend/venv
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
 
-ejecutar_app.py
-instalar_app.py
+# Archivos específicos en la raíz que no queremos subir
+/ejecutar_app.py
+/instalar_app.py
+/Ejecutar aplicacion.lnk
+/Instalar aplicacion.lnk
+/ejecutar_app
+/instalar_app
+/ejecutar_app.exe
+/instalar_app.exe
+
+# Otros archivos Python específicos en la raíz (pero no en subdirectorios)
+/*.py
