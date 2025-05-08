@@ -11,22 +11,20 @@ def run_command_in_new_terminal(command, cwd):
     system = platform.system()
 
     if system == 'Windows':
-        if command == "npm run dev -- --host":
+        if command=='python app.py':
+            subprocess.Popen(f'start cmd /K "cd /D {cwd} && venv\\Scripts\\activate && {command}"', shell=True)
+        else:
             subprocess.Popen(f'start cmd /K "cd /D {cwd} && {command}"', shell=True)
-        # En Windows: asegurarse de que la terminal se abra correctamente, active el entorno virtual y ejecute el comando
-        subprocess.Popen(f'start cmd /K "cd /D {cwd} && venv\\Scripts\\activate && {command}"', shell=True)
 
     elif system == 'Darwin':  # macOS
         apple_script = f'''
         tell application "Terminal"
-            do script "cd \\"{cwd}\\"; && {command}"
+            do script "cd \\"{cwd}\\"; source venv/bin/activate; {command}"
             activate
         end tell
         '''
         subprocess.Popen(['osascript', '-e', apple_script])
 
-    else:
-        print(f"Sistema operativo no soportado: {system}")
 
 def start_servers():
     system = platform.system()
@@ -37,11 +35,12 @@ def start_servers():
     elif system == 'Darwin':
         backend_command = 'python3 app.py'
 
+    frontend_command = 'npm run dev -- --host'
+
     # Ejecutar backend
     run_command_in_new_terminal(backend_command, backend_dir)
 
     # Comando frontend (igual para ambos sistemas operativos)
-    frontend_command = 'npm run dev -- --host'
     run_command_in_new_terminal(frontend_command, frontend_dir)
 
 if __name__ == '__main__':
