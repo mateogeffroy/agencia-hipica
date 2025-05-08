@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+ejecutar_app.py
+ejecutar_app.spec
+instalar_app.py
+instalar_app.spec
+build
+dist
