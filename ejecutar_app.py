@@ -1,87 +1,106 @@
-import subprocess 
+import subprocess
 import os
 import platform
 import sys
+import time
+import socket
+
+def limpiar_consola():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def get_base_dir():
     """Obtiene el directorio base de forma confiable"""
-    if getattr(sys, 'frozen', False):
-        return os.path.dirname(sys.executable)
-    else:
-        return os.path.dirname(os.path.abspath(__file__))
+    if getattr(sys, '_MEIPASS', False):
+        return sys._MEIPASS
+    return os.path.dirname(os.path.abspath(__file__))
 
-base_dir = get_base_dir()
-backend_dir = os.path.join(base_dir, 'backend')
-frontend_dir = os.path.join(base_dir, 'frontend')
-
-def run_command_in_new_terminal(command, cwd):
-    system = platform.system()
-    normalized_cwd = os.path.normpath(cwd)
-    
+def get_local_ip():
+    """Obtiene la IP local para acceso desde otros dispositivos"""
     try:
-        if system == 'Windows':
-            if 'python' in command:
-                # Backend: activar venv primero
-                activate_path = os.path.join(normalized_cwd, 'venv', 'Scripts', 'activate')
-                full_cmd = f'cmd /k "cd /D "{normalized_cwd}" && call "{activate_path}" && {command}"'
-            else:
-                # Frontend
-                full_cmd = f'cmd /k "cd /D "{normalized_cwd}" && {command}"'
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.connect(('8.8.8.8', 80))
+            return s.getsockname()[0]
+    except:
+        return '127.0.0.1'
+
+def run_in_window(command, cwd, title):
+    """Ejecuta un comando en una nueva ventana"""
+    try:
+        if platform.system() == 'Windows':
+            # Crear archivo .bat temporal
+            bat_content = f'@echo off\ntitle {title}\ncd /D "{cwd}"\n'
             
-            subprocess.Popen(full_cmd, shell=True)
+            if 'python' in command.lower():
+                bat_content += 'call venv\\Scripts\\activate\n'
             
-        elif system == 'Darwin':  # macOS
-            if 'python' in command:
-                # Backend: activar venv primero
-                activate_path = os.path.join(normalized_cwd, 'venv', 'bin', 'activate')
-                full_cmd = f'cd "{normalized_cwd}"; source "{activate_path}"; {command}'
-            else:
-                # Frontend
-                full_cmd = f'cd "{normalized_cwd}"; {command}'
+            bat_content += f'{command}\npause'
             
-            apple_script = f'''
+            bat_file = os.path.join(cwd, f'{title.replace(" ", "_")}.bat')
+            with open(bat_file, 'w') as f:
+                f.write(bat_content)
+            
+            subprocess.Popen(f'start cmd /k "{bat_file}"', shell=True)
+            return True
+            
+        elif platform.system() == 'Darwin':  # macOS
+            script = f'''
             tell application "Terminal"
-                do script "{full_cmd}"
+                do script "cd \\"{cwd}\\" && {'source venv/bin/activate && ' if 'python' in command.lower() else ''}{command}"
                 activate
             end tell
             '''
-            subprocess.Popen(['osascript', '-e', apple_script])
-            
-        elif system == 'Linux':
-            # Similar a macOS pero podrías usar xterm o gnome-terminal
-            print("Linux support needs to be implemented")
-            return False
+            subprocess.Popen(['osascript', '-e', script])
+            return True
             
     except Exception as e:
-        print(f"Error al ejecutar comando en nueva terminal: {e}")
+        print(f"Error: {e}")
         return False
-    
-    return True
 
-def start_servers():
-    system = platform.system()
+def main():
+    base_dir = get_base_dir()
+    backend_dir = os.path.join(base_dir, 'backend')
+    frontend_dir = os.path.join(base_dir, 'frontend')
     
-    # Comandos según el sistema operativo
-    backend_command = 'python app.py' if system == 'Windows' else 'python3 app.py'
-    frontend_command = 'npm run dev -- --host'
-    
-    # Verificar que los directorios existen
+    # Verificar que existen los directorios
     if not os.path.exists(backend_dir) or not os.path.exists(frontend_dir):
-        print("Error: No se encontraron los directorios backend o frontend")
-        return False
+        input("Error: No se encontraron los directorios backend o frontend\nPresione Enter para salir...")
+        return
     
-    # Ejecutar backend
-    if not run_command_in_new_terminal(backend_command, backend_dir):
-        print("Error al iniciar el backend")
-        return False
+    print("=== Iniciando Aplicación ===")
     
-    # Ejecutar frontend
-    if not run_command_in_new_terminal(frontend_command, frontend_dir):
-        print("Error al iniciar el frontend")
-        return False
+    # Configurar comandos según el sistema operativo
+    backend_cmd = 'python app.py' if platform.system() == 'Windows' else 'python3 app.py'
+    frontend_cmd = 'npm run dev -- --host'
     
-    print("Servidores iniciados correctamente")
-    return True
+    # Iniciar backend
+    print("\nIniciando backend...")
+    if run_in_window(backend_cmd, backend_dir, "Backend Server"):
+        print("Backend iniciado correctamente")
+        time.sleep(2)
+    else:
+        print("Error al iniciar backend")
+        time.sleep(2)
+    
+    # Pequeña pausa para evitar conflictos
+    time.sleep(2)
+    
+    # Iniciar frontend
+    print("\nIniciando frontend...")
+    if run_in_window(frontend_cmd, frontend_dir, "Frontend Server"):
+        print("Frontend iniciado correctamente")
+        time.sleep(2)
+    else:
+        print("Error al iniciar frontend")
+        time.sleep(2)
+    
+    # Mostrar información de acceso
+    ip = get_local_ip()
+    limpiar_consola()
+    print(f"\nAcceso desde otros dispositivos:")
+    print(f"Telefono: http://{ip}:5173/admin")
+    print(f"Televisor: http://{ip}:5173/televisor")
+    
+    input("\nPresione Enter para salir...")
 
 if __name__ == '__main__':
-    start_servers()
+    main()

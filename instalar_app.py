@@ -1,101 +1,91 @@
 import subprocess
 import os
 import platform
-import time
 import sys
+import tempfile
+import time
 
-base_dir = os.path.dirname(os.path.abspath(__file__))
-backend_dir = os.path.join(base_dir, 'backend')
-frontend_dir = os.path.join(base_dir, 'frontend')
+def get_base_dir():
+    """Obtiene el directorio base de forma confiable"""
+    if getattr(sys, '_MEIPASS', False):
+        return sys._MEIPASS
+    return os.path.dirname(os.path.abspath(__file__))
 
 def run_process(command, cwd=None):
-    """Ejecuta un proceso y espera a que termine"""
-    print(f"Ejecutando: {command}")
-    process = subprocess.Popen(
-        command,
-        shell=True,
-        cwd=cwd,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True
-    )
-    
-    # Mostrar salida en tiempo real
-    for line in process.stdout:
-        print(line.strip())
-    
-    # Esperar a que termine el proceso
-    process.wait()
-    return process.returncode
-
-def install_dependencies_backend(cwd):
-    system = platform.system()
-    print("\n--- Instalando dependencias del backend ---")
-    
+    """Ejecuta un proceso y muestra la salida"""
     try:
-        if system == 'Windows':
-            # Crear entorno virtual e instalar dependencias
-            run_process(f"pip install virtualenv", cwd=cwd)
-            run_process(f"python -m venv venv", cwd=cwd)
-            run_process(f"venv\\Scripts\\activate && pip install -r requirements.txt", cwd=cwd)
-            return True
-            
-        elif system == 'Darwin' or system == 'Linux':  # macOS o Linux
-            # Crear venv, activarlo e instalar dependencias
-            run_process(f"python3 -m venv venv", cwd=cwd)
-            run_process(f"source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt", cwd=cwd)
-            return True
-            
-        else:
-            print("Sistema no compatible. Solo se admite Windows, macOS y Linux.")
-            return False
-            
-    except Exception as e:
-        print(f"Error instalando dependencias del backend: {e}")
-        return False
-
-def install_dependencies_frontend(cwd):
-    system = platform.system()
-    print("\n--- Instalando dependencias del frontend ---")
-    
-    try:
-        # npm install funciona igual en todos los sistemas
-        result = run_process("npm install", cwd=cwd)
-        return result == 0
+        process = subprocess.Popen(
+            command,
+            cwd=cwd,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            universal_newlines=True
+        )
         
-    except Exception as e:
-        print(f"Error instalando dependencias del frontend: {e}")
-        return False
-
-def install_dependencies():
-    print("Iniciando instalación de dependencias...")
-    
-    # Verificar que existan los directorios
-    if not os.path.exists(backend_dir):
-        print(f"Error: No se encontró el directorio backend en {backend_dir}")
-        return False
+        while True:
+            output = process.stdout.readline()
+            if output == '' and process.poll() is not None:
+                break
+            if output:
+                print(output.strip())
         
-    if not os.path.exists(frontend_dir):
-        print(f"Error: No se encontró el directorio frontend en {frontend_dir}")
+        return process.returncode
+    except Exception as e:
+        print(f"Error: {e}")
+        return 1
+
+def install_backend():
+    """Instala dependencias del backend"""
+    print("\nInstalando backend...")
+    backend_dir = os.path.join(get_base_dir(), 'backend')
+    
+    if not os.path.exists(os.path.join(backend_dir, 'requirements.txt')):
+        print("Error: No se encontró requirements.txt")
         return False
     
-    # Instalar dependencias
-    backend_success = install_dependencies_backend(backend_dir)
-    frontend_success = install_dependencies_frontend(frontend_dir)
-    
-    # Verificar resultado
-    if backend_success and frontend_success:
-        print("\n" + "="*52)
-        print("DEPENDENCIAS DE LA APLICACION INSTALADAS CON EXITO")
-        print("="*52)
-        return True
+    if platform.system() == 'Windows':
+        commands = [
+            'python -m pip install --upgrade pip',
+            'python -m venv venv',
+            f'call venv\\Scripts\\activate && pip install -r requirements.txt'
+        ]
     else:
-        print("\n" + "="*50)
-        print("Error en la instalación. Revise los mensajes anteriores.")
-        print("="*50)
+        commands = [
+            'python3 -m pip install --upgrade pip',
+            'python3 -m venv venv',
+            f'source venv/bin/activate && pip install -r requirements.txt'
+        ]
+    
+    for cmd in commands:
+        if run_process(cmd, backend_dir) != 0:
+            return False
+    return True
+
+def install_frontend():
+    """Instala dependencias del frontend"""
+    print("\nInstalando frontend...")
+    frontend_dir = os.path.join(get_base_dir(), 'frontend')
+    
+    if not os.path.exists(os.path.join(frontend_dir, 'package.json')):
+        print("Error: No se encontró package.json")
         return False
+    
+    return run_process('npm install', frontend_dir) == 0
+
+def main():
+    print("=== Instalador de Dependencias ===")
+    
+    # Instalar backend y frontend
+    backend_ok = install_backend()
+    frontend_ok = install_frontend()
+    
+    if backend_ok and frontend_ok:
+        print("\n✅ Instalación completada con éxito!")
+    else:
+        print("\n❌ Hubo errores durante la instalación")
+    
+    input("\nPresione Enter para salir...")
 
 if __name__ == '__main__':
-    install_dependencies()
-    # Esperar 3 segundos antes de cerrar para que se pueda leer el mensaje final
-    time.sleep(3)
+    main()
