@@ -85,9 +85,9 @@ def install_dependencies():
     
     # Verificar resultado
     if backend_success and frontend_success:
-        print("\n" + "="*50)
-        print("¡PROYECTO INSTALADO CON ÉXITO!")
-        print("="*50)
+        print("\n" + "="*52)
+        print("DEPENDENCIAS DE LA APLICACION INSTALADAS CON EXITO")
+        print("="*52)
         return True
     else:
         print("\n" + "="*50)
