@@ -19,6 +19,14 @@ function Admin() {
       setEstado('Debe completar ambos campos')
       setTimeout(() => setEstado(''), 3000)
       return
+    } else if (isNaN(carrera) || carrera < 1 || carrera > 18) {
+      setEstado('El número de carrera debe ser entre 1 y 18')
+      setTimeout(() => setEstado(''), 3000)
+      return
+    } else if (isNaN(caballo) || caballo < 1 || caballo > 18) {
+      setEstado('El número de caballo debe ser entre 1 y 18')
+      setTimeout(() => setEstado(''), 3000)
+      return
     }
 
     try {
@@ -38,6 +46,14 @@ function Admin() {
   const buscarYEliminarCaballo = async () => {
     if (!carrera || !caballo) {
       setEstado('Debe completar ambos campos')
+      setTimeout(() => setEstado(''), 3000)
+      return
+    } else if (isNaN(carrera) || carrera < 1 || carrera > 18) {
+      setEstado('El número de carrera debe ser entre 1 y 18')
+      setTimeout(() => setEstado(''), 3000)
+      return
+    } else if (isNaN(caballo) || caballo < 1 || caballo > 18) {
+      setEstado('El número de caballo debe ser entre 1 y 18')
       setTimeout(() => setEstado(''), 3000)
       return
     }
@@ -99,18 +115,22 @@ function Admin() {
         <div className="p-4 md:p-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-gray-700 mb-2">Número de carrera</label>
+              <label className="block text-gray-700 mb-2">Número de carrera (1-18)</label>
               <input
                 type="number"
+                min="1"
+                max="18"
                 className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={carrera}
                 onChange={(e) => setCarrera(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-gray-700 mb-2">Caballo</label>
+              <label className="block text-gray-700 mb-2">Número de caballo (1-18)</label>
               <input
-                type="text"
+                type="number"
+                min="1"
+                max="18"
                 className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={caballo}
                 onChange={(e) => setCaballo(e.target.value)}
@@ -128,7 +148,7 @@ function Admin() {
 
             <button
               onClick={buscarYEliminarCaballo}
-              className="bg-red-600 hover:bg-yellow-700 text-white py-2 px-4 rounded-md transition duration-200 flex-1"
+              className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md transition duration-200 flex-1"
             >
               Eliminar caballo borrado
             </button>

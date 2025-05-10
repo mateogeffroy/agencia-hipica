@@ -101,7 +101,7 @@ def main():
     print("="*52)
     print(f"Telefono: http://{ip}:5173/admin")
     print(f"Televisor: http://{ip}:5173/televisor")
-    input("\nPuede cerrar esta ventana.")
+    input("\nNo cerrar esta ventana durante el uso del sistema.")
 
 if __name__ == '__main__':
     main()

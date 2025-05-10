@@ -1,5 +1,5 @@
 @echo off
 title Frontend Server
-cd /D "C:\Users\Mateo\Desktop\agencia-hipica\frontend"
+cd /D "C:\Users\mateo\Desktop\agencia-hipica\frontend"
 npm run dev -- --host
 pause
