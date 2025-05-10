@@ -5,6 +5,9 @@ import sys
 import tempfile
 import time
 
+def limpiar_consola():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 def get_base_dir():
     """Obtiene el directorio base de forma confiable"""
     if getattr(sys, '_MEIPASS', False):
@@ -37,7 +40,8 @@ def run_process(command, cwd=None):
 
 def install_backend():
     """Instala dependencias del backend"""
-    print("\nInstalando backend...")
+    limpiar_consola()
+    print("Instalando backend...")
     backend_dir = os.path.join(get_base_dir(), 'backend')
     
     if not os.path.exists(os.path.join(backend_dir, 'requirements.txt')):
@@ -64,7 +68,8 @@ def install_backend():
 
 def install_frontend():
     """Instala dependencias del frontend"""
-    print("\nInstalando frontend...")
+    limpiar_consola()
+    print("Instalando frontend...")
     frontend_dir = os.path.join(get_base_dir(), 'frontend')
     
     if not os.path.exists(os.path.join(frontend_dir, 'package.json')):
@@ -74,18 +79,26 @@ def install_frontend():
     return run_process('npm install', frontend_dir) == 0
 
 def main():
-    print("=== Instalador de Dependencias ===")
-    
+    limpiar_consola()
+    print("==================== Instalador de Dependencias ====================")
+    time.sleep(2)
+
     # Instalar backend y frontend
     backend_ok = install_backend()
+    print("Backend instalado correctamente.")
+    time.sleep(2)
+
     frontend_ok = install_frontend()
-    
+    print("Frontend instalado correctamente.")
+    time.sleep(2)
+
     if backend_ok and frontend_ok:
-        print("\n✅ Instalación completada con éxito!")
+        limpiar_consola()
+        print("Instalación completada con éxito!")
     else:
-        print("\n❌ Hubo errores durante la instalación")
-    
-    input("\nPresione Enter para salir...")
+        limpiar_consola()
+        print("Hubo errores durante la instalación")
+    input("Puede cerrar esta ventana.")
 
 if __name__ == '__main__':
     main()

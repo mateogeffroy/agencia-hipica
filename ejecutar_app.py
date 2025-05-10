@@ -65,9 +65,9 @@ def main():
     if not os.path.exists(backend_dir) or not os.path.exists(frontend_dir):
         input("Error: No se encontraron los directorios backend o frontend\nPresione Enter para salir...")
         return
-    
-    print("=== Iniciando Aplicación ===")
-    
+    print("="*52)
+    print("Iniciando Aplicacion")
+    print("="*52)
     # Configurar comandos según el sistema operativo
     backend_cmd = 'python app.py' if platform.system() == 'Windows' else 'python3 app.py'
     frontend_cmd = 'npm run dev -- --host'
@@ -96,11 +96,12 @@ def main():
     # Mostrar información de acceso
     ip = get_local_ip()
     limpiar_consola()
-    print(f"\nAcceso desde otros dispositivos:")
+    print("="*52)
+    print(f"Acceso desde otros dispositivos:")
+    print("="*52)
     print(f"Telefono: http://{ip}:5173/admin")
     print(f"Televisor: http://{ip}:5173/televisor")
-    
-    input("\nPresione Enter para salir...")
+    input("\nPuede cerrar esta ventana.")
 
 if __name__ == '__main__':
     main()
