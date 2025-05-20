@@ -9,9 +9,9 @@ def limpiar_consola():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def get_base_dir():
-    """Obtiene el directorio base de forma confiable"""
-    if getattr(sys, '_MEIPASS', False):
-        return sys._MEIPASS
+    """Obtiene el directorio base de forma confiable para la app empaquetada"""
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
     return os.path.dirname(os.path.abspath(__file__))
 
 def get_local_ip():

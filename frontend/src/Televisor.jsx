@@ -104,33 +104,41 @@ function Televisor() {
   return (
     <div className='min-h-screen bg-[#0067A3] text-white flex flex-col'>
       {/* Header */}
-      <header className='w-full bg-[#2CAF50] text-white py-4 px-4 shadow-md'>
-        <div className='flex flex-col md:flex-row items-center justify-center gap-4'>
-          <img 
-            src="/pngwing.com.png" 
-            alt="Logo" 
-            className='h-30 w-30 rounded-full object-contain' 
-          />
-          <div className='text-center'>
-            <h1 className='text-4xl md:text-6xl font-bold text-center'>
+      <header className='w-full bg-[#2CAF50] text-white py-6 px-6 shadow-md'>
+        <div className='flex flex-row items-center justify-between w-full'>
+
+          {/* Hipódromo */}
+          <div className='bg-[#0067A3] px-4 py-2 rounded-xl text-2xl md:text-4xl font-bold flex items-center justify-center'>
+            Hipódromo: {hipodromo}
+          </div>
+
+          {/* Imagen + Título */}
+          <div className='flex flex-row items-center gap-4 text-center'>
+            <img 
+              src="/pngwing.com.png" 
+              alt="Logo" 
+              className='h-20 w-20 rounded-full object-contain'
+            />
+            <h1 className='text-5xl md:text-6xl font-extrabold whitespace-nowrap'>
               Hípica - Calle 13 esquina 520
             </h1>
-            <p className='text-lg md:text-2xl mt-1'>
-              Hipodromo: {hipodromo} - Pista de {pista}
-            </p>
           </div>
+
+          {/* Pista */}
+          <div className='bg-[#0067A3] px-4 py-2 rounded-xl text-2xl md:text-4xl font-bold flex items-center justify-center'>
+            Pista de {pista}
+          </div>
+
         </div>
       </header>
-
-
-
+      
       {/* Main content - fills remaining space */}
       <main className='flex-1 flex flex-col'>
-        <h1 className='text-3xl md:text-5xl font-bold text-center mt-2 mb-1'>Caballos Borrados</h1>
+        <h1 className='text-6xl md:text-8xl font-extrabold text-center mt-2 mb-1 tracking-wide'>Caballos Borrados</h1>
         {/* Three equal-width columns container */}
         <div className='flex-1 grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-4 p-4'>
           {/* Left column (races 1-6) */}
-          <div className='flex flex-col gap-2 md:gap-4'>
+          <div className='flex flex-col gap-1.5 md:gap-2'>
             {[1, 2, 3, 4, 5, 6].map((carrera) => {
               const caballos = agrupadosPorCarrera[carrera]
               return (
@@ -146,7 +154,7 @@ function Televisor() {
           </div>
 
           {/* Center column (races 7-12) */}
-          <div className='flex flex-col gap-2 md:gap-4 mt-2 md:mt-0'>
+          <div className='flex flex-col gap-1.5 md:gap-2'>
             {[7, 8, 9, 10, 11, 12].map((carrera) => {
               const caballos = agrupadosPorCarrera[carrera]
               return (
@@ -162,7 +170,7 @@ function Televisor() {
           </div>
 
           {/* Right column (races 13-18) */}
-          <div className='flex flex-col gap-2 md:gap-4 mt-2 md:mt-0'>
+          <div className='flex flex-col gap-1.5 md:gap-2'>
             {[13, 14, 15, 16, 17, 18].map((carrera) => {
               const caballos = agrupadosPorCarrera[carrera]
               return (
