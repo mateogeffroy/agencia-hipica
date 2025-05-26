@@ -3,7 +3,6 @@ import os
 import platform
 import sys
 import time
-import resource_paths
 
 def limpiar_consola():
     os.system('cls' if os.name == 'nt' else 'clear')

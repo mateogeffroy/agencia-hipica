@@ -9,8 +9,6 @@ function Admin() {
   const [carrera, setCarrera] = useState('')
   const [caballo, setCaballo] = useState('')
   const [estado, setEstado] = useState('')
-
-  // Nuevos selectores
   const [hipodromo, setHipodromo] = useState('San Isidro')
   const [pista, setPista] = useState('cesped')
 
@@ -23,16 +21,18 @@ function Admin() {
       setEstado('El número de carrera debe ser entre 1 y 18')
       setTimeout(() => setEstado(''), 3000)
       return
-    } else if (isNaN(caballo) || caballo < 1 || caballo > 18) {
-      setEstado('El número de caballo debe ser entre 1 y 18')
+    } else if (!/^\d{1,2}\s*[a-dA-D]?$/.test(caballo.trim())) {
+      setEstado('El formato del caballo debe ser un número (1-18) o número seguido de A-D (ej: 7, 7A)')
       setTimeout(() => setEstado(''), 3000)
       return
     }
 
+    const caballoFormateado = caballo.replace(/\s+/g, '').toUpperCase()
+
     try {
       await axios.post(`${baseURL}/api/borrados`, {
         carrera,
-        caballo
+        caballo: caballoFormateado,
       })
       setCaballo('')
       setEstado('Borrado enviado correctamente')
@@ -52,21 +52,23 @@ function Admin() {
       setEstado('El número de carrera debe ser entre 1 y 18')
       setTimeout(() => setEstado(''), 3000)
       return
-    } else if (isNaN(caballo) || caballo < 1 || caballo > 18) {
-      setEstado('El número de caballo debe ser entre 1 y 18')
+    } else if (!/^\d{1,2}\s*[a-dA-D]?$/.test(caballo.trim())) {
+      setEstado('El formato del caballo debe ser un número (1-18) o número seguido de A-D (ej: 7, 7A)')
       setTimeout(() => setEstado(''), 3000)
       return
     }
+
+    const caballoFormateado = caballo.replace(/\s+/g, '').toUpperCase()
 
     try {
       const res = await axios.get(`${baseURL}/api/borrados/${carrera}`)
       const caballosEnCarrera = res.data.map(String)
 
       if (caballosEnCarrera.includes(caballo)) {
-        await axios.delete(`${baseURL}/api/borrados/${carrera}/${caballo}`)
-        setEstado(`Caballo ${caballo} eliminado de la carrera ${carrera}`)
+        await axios.delete(`${baseURL}/api/borrados/${carrera}/${caballoFormateado}`)
+        setEstado(`Caballo ${caballoFormateado} eliminado de la carrera ${carrera}`)
       } else {
-        setEstado(`El caballo ${caballo} no está en la lista de borrados para la carrera ${carrera}`)
+        setEstado(`El caballo ${caballoFormateado} no está en la lista de borrados para la carrera ${carrera}`)
       }
 
       setCaballo('')
@@ -100,8 +102,15 @@ function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div 
+      className="min-h-screen p-4 md:p-8 relative bg-cover bg-center bg-fixed"
+      style={{ backgroundImage: "url('/fondo-caballo.jpg')" }}
+    >
+      {/* Capa de superposición con difuminado */}
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+      
+      {/* Contenido principal */}
+      <div className="relative z-10 max-w-4xl mx-auto bg-white/90 rounded-lg shadow-md overflow-hidden">
         <div className="bg-blue-600 p-4 md:p-6">
           <h1 className="text-2xl md:text-3xl font-bold text-white">Panel de Administración</h1>
         </div>
@@ -128,9 +137,7 @@ function Admin() {
             <div>
               <label className="block text-gray-700 mb-2">Número de caballo (1-18)</label>
               <input
-                type="number"
-                min="1"
-                max="18"
+                type="text"
                 className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={caballo}
                 onChange={(e) => setCaballo(e.target.value)}
@@ -154,7 +161,6 @@ function Admin() {
             </button>
           </div>
 
-          {/* Select Hipódromo */}
           <div className="flex items-center gap-4">
             <select
               className="p-2 border rounded"
@@ -173,7 +179,6 @@ function Admin() {
             </button>
           </div>
 
-          {/* Select Pista */}
           <div className="flex items-center gap-4">
             <select
               className="p-2 border rounded"

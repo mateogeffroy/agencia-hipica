@@ -102,98 +102,110 @@ function Televisor() {
   } 
 
   return (
-    <div className='min-h-screen bg-[#0067A3] text-white flex flex-col'>
-      {/* Header */}
-      <header className='w-full bg-[#2CAF50] text-white py-6 px-6 shadow-md'>
-        <div className='flex flex-row items-center justify-between w-full'>
+    <div 
+      className='min-h-screen text-white flex flex-col relative'
+      style={{
+        backgroundImage: "url('/fondo-caballo.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed"
+      }}
+    >
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-md brightness-75"></div>
+      <div className="relative z-10">
+        {/* Header */}
+        <header className='w-full bg-[#2CAF50] text-white py-6 px-6 shadow-md'>
+          <div className='flex flex-row items-center justify-between w-full'>
 
-          {/* Hipódromo */}
-          <div className='bg-[#0067A3] px-4 py-2 rounded-xl text-2xl md:text-4xl font-bold flex items-center justify-center'>
-            Hipódromo: {hipodromo}
+            {/* Hipódromo */}
+            <div className='bg-[#0067A3] px-4 py-2 rounded-xl text-2xl md:text-4xl font-bold flex items-center justify-center'>
+              Hipódromo: {hipodromo}
+            </div>
+
+            {/* Imagen + Título */}
+            <div className='flex flex-row items-center gap-4 text-center'>
+              <img 
+                src="/pngwing.com.png" 
+                alt="Logo" 
+                className='h-20 w-20 rounded-full object-contain'
+                />
+              <h1 className='text-5xl md:text-6xl font-extrabold whitespace-nowrap'>
+                Hípica - Calle 13 esquina 520
+              </h1>
+            </div>
+
+            {/* Pista */}
+            <div className='bg-[#0067A3] px-4 py-2 rounded-xl text-2xl md:text-4xl font-bold flex items-center justify-center'>
+              Pista de {pista}
+            </div>
+
           </div>
-
-          {/* Imagen + Título */}
-          <div className='flex flex-row items-center gap-4 text-center'>
-            <img 
-              src="/pngwing.com.png" 
-              alt="Logo" 
-              className='h-20 w-20 rounded-full object-contain'
-            />
-            <h1 className='text-5xl md:text-6xl font-extrabold whitespace-nowrap'>
-              Hípica - Calle 13 esquina 520
-            </h1>
-          </div>
-
-          {/* Pista */}
-          <div className='bg-[#0067A3] px-4 py-2 rounded-xl text-2xl md:text-4xl font-bold flex items-center justify-center'>
-            Pista de {pista}
-          </div>
-
-        </div>
-      </header>
-      
-      {/* Main content - fills remaining space */}
-      <main className='flex-1 flex flex-col'>
-        <h1 className='text-6xl md:text-8xl font-extrabold text-center mt-2 mb-1 tracking-wide'>Caballos Borrados</h1>
-        {/* Three equal-width columns container */}
-        <div className='flex-1 grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-4 p-4'>
-          {/* Left column (races 1-6) */}
-          <div className='flex flex-col gap-1.5 md:gap-2'>
-            {[1, 2, 3, 4, 5, 6].map((carrera) => {
-              const caballos = agrupadosPorCarrera[carrera]
-              return (
-                <div key={carrera} className='bg-gray-700 rounded-lg p-3 flex items-center border-4 border-black h-25'
->
-                  <div className="flex items-center gap-4">
-                    <span className="font-bold text-5xl">{carrera}</span>
-                    {renderCaballosBorrados(carrera, caballos)}
+        </header>
+        
+        {/* Main content - fills remaining space */}
+        <main className='flex-1 flex flex-col'>
+          
+          <h1 className='text-6xl md:text-8xl font-extrabold text-center mt-2 mb-1 tracking-wide'>Caballos Borrados</h1>
+          {/* Three equal-width columns container */}
+          <div className='flex-1 grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-4 p-4'>
+            {/* Left column (races 1-6) */}
+            <div className='flex flex-col gap-1.5 md:gap-2'>
+              {[1, 2, 3, 4, 5, 6].map((carrera) => {
+                const caballos = agrupadosPorCarrera[carrera]
+                return (
+                  <div key={carrera} className='bg-gray-700 rounded-lg p-3 flex items-center border-4 border-black h-25'
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="font-bold text-5xl">{carrera}</span>
+                      {renderCaballosBorrados(carrera, caballos)}
+                    </div>
                   </div>
-                </div>
-              )
-            })}
-          </div>
+                )
+              })}
+            </div>
 
-          {/* Center column (races 7-12) */}
-          <div className='flex flex-col gap-1.5 md:gap-2'>
-            {[7, 8, 9, 10, 11, 12].map((carrera) => {
-              const caballos = agrupadosPorCarrera[carrera]
-              return (
-                <div key={carrera} className='bg-gray-700 rounded-lg p-3 flex items-center border-4 border-black h-25'
->
-                  <div className="flex items-center gap-4">
-                    <span className="font-bold text-5xl">{carrera}</span>
-                    {renderCaballosBorrados(carrera, caballos)}
+            {/* Center column (races 7-12) */}
+            <div className='flex flex-col gap-1.5 md:gap-2'>
+              {[7, 8, 9, 10, 11, 12].map((carrera) => {
+                const caballos = agrupadosPorCarrera[carrera]
+                return (
+                  <div key={carrera} className='bg-gray-700 rounded-lg p-3 flex items-center border-4 border-black h-25'
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="font-bold text-5xl">{carrera}</span>
+                      {renderCaballosBorrados(carrera, caballos)}
+                    </div>
                   </div>
-                </div>
-              )
-            })}
-          </div>
+                )
+              })}
+            </div>
 
-          {/* Right column (races 13-18) */}
-          <div className='flex flex-col gap-1.5 md:gap-2'>
-            {[13, 14, 15, 16, 17, 18].map((carrera) => {
-              const caballos = agrupadosPorCarrera[carrera]
-              return (
-                <div key={carrera} className='bg-gray-700 rounded-lg p-3 flex items-center border-4 border-black h-25'
->
-                  <div className="flex items-center gap-4">
-                    <span className="font-bold text-5xl">{carrera}</span>
-                    {renderCaballosBorrados(carrera, caballos)}
+            {/* Right column (races 13-18) */}
+            <div className='flex flex-col gap-1.5 md:gap-2'>
+              {[13, 14, 15, 16, 17, 18].map((carrera) => {
+                const caballos = agrupadosPorCarrera[carrera]
+                return (
+                  <div key={carrera} className='bg-gray-700 rounded-lg p-3 flex items-center border-4 border-black h-25'
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="font-bold text-5xl">{carrera}</span>
+                      {renderCaballosBorrados(carrera, caballos)}
+                    </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* Next race section at bottom */}
-        {horario && (
-          <div className='bg-[#2CAF50] rounded-lg p-3 mx-4 mb-4 text-center'>
-            <h2 className='text-xl md:text-2xl font-semibold'>Próxima carrera</h2>
-            <p className='text-2xl md:text-3xl font-bold'>{horario}</p>
-          </div>
-        )}
-      </main>
+          {/* Next race section at bottom */}
+          {horario && (
+            <div className='bg-[#2CAF50] rounded-lg p-3 mx-4 mb-4 text-center'>
+              <h2 className='text-xl md:text-2xl font-semibold'>Próxima carrera</h2>
+              <p className='text-2xl md:text-3xl font-bold'>{horario}</p>
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   )
 }
