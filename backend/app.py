@@ -4,12 +4,14 @@ from flask_socketio import SocketIO
 import re # Importar el módulo re para expresiones regulares
 
 app = Flask(__name__)
-CORS(app)
+FRONTEND_URL = "https://caballosborrados.vercel.app" 
+# Configuración de CORS para rutas HTTP
+CORS(app, resources={
+    r"/api/*": {"origins": FRONTEND_URL}
+})
 
 # Configuración de SocketIO
-# Se aumenta el ping_timeout para dar más tiempo al cliente para responder
-# antes de que el servidor lo considere desconectado.
-socketio = SocketIO(app, cors_allowed_origins="*", ping_timeout=60) # Valor por defecto es 5 segundos
+socketio = SocketIO(app, cors_allowed_origins=[FRONTEND_URL], ping_timeout=60)
 
 # Datos en memoria (variables globales para almacenar el estado de la aplicación)
 borrados = []

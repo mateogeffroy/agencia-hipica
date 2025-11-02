@@ -220,7 +220,7 @@ function Televisor() {
                             rounded-lg shadow-xl h-15
                             flex flex-col md:flex-row items-center justify-center gap-[2vmin] md:gap-[3vmin]'>
               <p className='text-4xl font-extrabold text-center whitespace-nowrap leading-tight'>
-                ¡Ojo con este!
+                ¡Guarda con este!
               </p>
               <div className="flex items-center gap-[2vmin] md:gap-[2.5vmin]">
                 <span className="text-4xl font-extrabold text-white bg-gray-700 rounded-lg p-1 flex items-center border-[0.4vmin] border-black">Carrera {carreraOjo}</span>
