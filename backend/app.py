@@ -1,10 +1,12 @@
+import eventlet
+eventlet.monkey_patch()
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO
 import re # Importar el módulo re para expresiones regulares
 
 app = Flask(__name__)
-FRONTEND_URL = "https://caballosborrados.vercel.app" 
+FRONTEND_URL = "https://agencia-hipica.vercel.app" 
 # Configuración de CORS para rutas HTTP
 CORS(app, resources={
     r"/api/*": {"origins": FRONTEND_URL}
