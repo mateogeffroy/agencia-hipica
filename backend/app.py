@@ -11,6 +11,15 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 db_url = os.environ.get('DATABASE_URL')
+
+if not db_url:
+    print("=" * 70)
+    print("  ERROR CRÍTICO: La variable de entorno DATABASE_URL no está configurada.")
+    print("  Asegúrate de que la variable exista en el panel de 'Environment' de Render.")
+    print("  La aplicación no puede iniciarse sin una base de datos.")
+    print("=" * 70)
+    raise RuntimeError("DATABASE_URL no está configurada.")
+
 if db_url and db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
