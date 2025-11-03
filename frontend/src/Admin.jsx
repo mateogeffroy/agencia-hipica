@@ -102,6 +102,31 @@ function Admin() {
     }
   };
 
+  const handleMasterReset = async () => {
+    const
+  confirmado = window.confirm(
+      "¿ESTÁS SEGURO?\n\nEsto borrará TODOS los caballos, el hipódromo y la pista. La acción no se puede deshacer."
+    );
+
+    if (confirmado) {
+      try {
+        await axios.post(`${baseURL}/api/master-reset`);
+        setEstado('¡SISTEMA RESETEADO CORRECTAMENTE!');
+
+        // También reseteamos los inputs locales del admin
+        setCarrera('');
+        setCaballo('');
+        setCarreraOjo('');
+        setCaballoOjo('');
+
+        setTimeout(() => setEstado(''), 4000);
+      } catch (error) {
+        setEstado('Error al intentar resetear el sistema.');
+        setTimeout(() => setEstado(''), 3000);
+      }
+    }
+  };
+
   const buscarYEliminarCaballo = async () => {
     if (!carrera || !caballo) {
       setEstado('Debe completar ambos campos de borrado.');
@@ -415,11 +440,25 @@ function Admin() {
               </button>
             </div>
           </div>
+          <div className="border border-red-600 rounded-lg p-4 bg-red-50 shadow-sm">
+            <h2 className="text-xl font-semibold text-red-800 mb-4">Zona de Peligro</h2>
+            <p className="text-red-700 mb-4 text-sm">
+              Este botón reseteará todos los datos. Todos los borrados se eliminarán
+              y el hipódromo y la pista se pondrán en blanco.
+            </p>
+            <button
+              onClick={handleMasterReset}
+              className="bg-red-600 hover:bg-red-800 text-white font-bold py-3 px-6 rounded-md transition duration-200 w-full"
+            >
+              RESETEAR
+            </button>
+          </div>
+          {/* --- FIN DE LA NUEVA SECCIÓN --- */}
 
         </div>
       </div>
     </div>
-  );
-}
+    );
+    }
 
 export default Admin;
