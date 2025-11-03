@@ -18,7 +18,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-FRONTEND_URL = "https.agencia-hipica.vercel.app" 
+FRONTEND_URL = "https://agencia-hipica.vercel.app" 
 
 CORS(app, resources={
     r"/api/*": {"origins": FRONTEND_URL}
